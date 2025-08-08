@@ -7,13 +7,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Ethers.js from unpkg CDN -->
     <script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-    <!-- Vercel Analytics -->
+    <!-- Vercel Analytics - Simplified for GitHub Pages -->
     <script type="module">
-        import { inject, track } from 'https://unpkg.com/@vercel/analytics@1.1.1/dist/index.js';
-        inject();
-        
-        // Make track function available globally
-        window.trackEvent = track;
+        try {
+            const { inject, track } = await import('https://unpkg.com/@vercel/analytics@1.1.1/dist/index.js');
+            inject();
+            window.trackEvent = track;
+        } catch (error) {
+            console.log('Analytics not available in this environment');
+            window.trackEvent = function() {}; // Fallback function
+        }
     </script>
     <style>
         * {
@@ -949,6 +952,10 @@
 
         // Real wallet connection with fallback for ethers
         async function handleLogin() {
+            console.log('🔌 WALLET CONNECTION ATTEMPT - handleLogin called');
+            console.log('- window.ethereum available:', !!window.ethereum);
+            console.log('- ethers available:', typeof ethers !== 'undefined');
+            
             try {
                 // Check if we have Web3 provider (desktop or mobile wallet browser)
                 if (window.ethereum) {
