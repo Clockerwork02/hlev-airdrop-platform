@@ -1063,6 +1063,13 @@
                 // Mobile device without wallet - show wallet options
                 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                 
+                // Reset button first
+                const connectBtn = document.querySelector('.connect-btn');
+                if (connectBtn) {
+                    connectBtn.textContent = 'Connect Wallet';
+                    connectBtn.disabled = false;
+                }
+                
                 if (isMobile) {
                     showMobileWalletOptions();
                 } else {
@@ -1070,11 +1077,29 @@
                 }
             } catch (error) {
                 console.error('Connection failed:', error);
+                
+                // Reset button state
+                const connectBtn = document.querySelector('.connect-btn');
+                if (connectBtn) {
+                    connectBtn.textContent = 'Connect Wallet';
+                    connectBtn.disabled = false;
+                }
+                
                 if (error.code === 4001) {
                     alert('Connection rejected by user');
                 } else {
                     alert('Failed to connect wallet: ' + error.message);
                 }
+            } finally {
+                // Always reset button if still connecting
+                setTimeout(() => {
+                    const connectBtn = document.querySelector('.connect-btn');
+                    if (connectBtn && connectBtn.textContent === 'Connecting...') {
+                        connectBtn.textContent = 'Connect Wallet';
+                        connectBtn.disabled = false;
+                        console.log('Reset stuck connecting button');
+                    }
+                }, 5000);
             }
         }
 
