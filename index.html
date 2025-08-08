@@ -417,7 +417,7 @@
                 <div class="wallet-connect">
                     <h2>Connect Your Wallet</h2>
                     <p>Connect your wallet to check eligibility and claim tokens</p>
-                    <button class="connect-btn" onclick="handleLogin()">
+                    <button class="connect-btn" onclick="console.log('Connect button clicked!'); handleLogin();">
                         Connect Wallet
                     </button>
                 </div>
@@ -891,7 +891,7 @@
                     <div class="wallet-connect">
                         <h2>Connect Your Wallet</h2>
                         <p>Connect your wallet to check eligibility and claim tokens</p>
-                        <button class="connect-btn" onclick="handleLogin()">
+                        <button class="connect-btn" onclick="console.log('Connect button clicked!'); handleLogin();">
                             Connect Wallet
                         </button>
                     </div>
@@ -955,6 +955,14 @@
             console.log('🔌 WALLET CONNECTION ATTEMPT - handleLogin called');
             console.log('- window.ethereum available:', !!window.ethereum);
             console.log('- ethers available:', typeof ethers !== 'undefined');
+            console.log('- User agent:', navigator.userAgent);
+            
+            // Show immediate feedback
+            const connectBtn = document.querySelector('.connect-btn');
+            if (connectBtn) {
+                connectBtn.textContent = 'Connecting...';
+                connectBtn.disabled = true;
+            }
             
             try {
                 // Check if we have Web3 provider (desktop or mobile wallet browser)
