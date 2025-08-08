@@ -37,6 +37,20 @@ Preferred communication style: Simple, everyday language.
 
 # Recent Changes
 
+## 2024-08-08: Testing Configuration Update (COMPLETED)
+- Lowered minimum HYPE requirement from 1.0 to 0.01 for easier testing
+- Updated eligibility check to allow users with 0.01+ HYPE to claim tokens
+- Maintained production-ready codebase with proper validation
+- Updated GitHub deployment with new testing parameters
+
+## 2024-08-08: Vercel Analytics Integration (COMPLETED)
+- Added comprehensive analytics tracking throughout the airdrop platform
+- Implemented custom event tracking for wallet selections, connections, and claim attempts
+- Added success tracking for completed token claims with transaction hashes
+- Integrated page load analytics with device type and referrer detection
+- All user interactions now tracked for insights and optimization
+- Analytics data includes anonymized wallet addresses (first 6 + last 4 characters)
+
 ## 2024-08-08: Fixed Eligibility Logic (COMPLETED)
 - Fixed eligibility check to require minimum 1 HYPE token instead of showing all wallets as eligible
 - Users with 0 HYPE now correctly show as "NOT ELIGIBLE"
