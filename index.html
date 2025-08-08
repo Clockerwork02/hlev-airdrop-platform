@@ -7,6 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Ethers.js from unpkg CDN -->
     <script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <!-- Vercel Analytics -->
+    <script type="module">
+        import { inject, track } from 'https://unpkg.com/@vercel/analytics@1.1.1/dist/index.js';
+        inject();
+        
+        // Make track function available globally
+        window.trackEvent = track;
+    </script>
     <style>
         * {
             margin: 0;
@@ -460,6 +468,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('HLEV Airdrop app loaded');
             
+            // Track page load
+            if (window.trackEvent) {
+                window.trackEvent('Airdrop Page Loaded', {
+                    userAgent: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop',
+                    referrer: document.referrer || 'direct'
+                });
+            }
+            
             // Initialize UI immediately
             updateUI();
             initializeCountdown();
@@ -614,6 +630,15 @@
 
         // Handle claim with fallback for no ethers
         async function handleClaim() {
+            // Track claim attempt
+            if (window.trackEvent) {
+                window.trackEvent('Claim Attempted', { 
+                    eligible: isEligible,
+                    alreadyClaimed: hasClaimed,
+                    walletAddress: user?.wallet?.address ? user.wallet.address.substring(0, 6) + '...' + user.wallet.address.substring(user.wallet.address.length - 4) : 'none'
+                });
+            }
+
             console.log('🔥 CLAIM BUTTON CLICKED - handleClaim function called!');
             console.log(`Current state:`);
             console.log(`- isEligible: ${isEligible}`);
@@ -739,6 +764,15 @@
                         
                         await claimTx.wait();
                         console.log('Claim successful:', claimTx.hash);
+                        
+                        // Track successful claim
+                        if (window.trackEvent) {
+                            window.trackEvent('Claim Successful', { 
+                                txHash: claimTx.hash,
+                                walletAddress: user?.wallet?.address ? user.wallet.address.substring(0, 6) + '...' + user.wallet.address.substring(user.wallet.address.length - 4) : 'none',
+                                amount: '20000 HLEV'
+                            });
+                        }
                         
                     } catch (signError) {
                         console.error('EIP-712 signature error:', signError);
@@ -1140,6 +1174,11 @@
 
         // Open mobile wallet apps with working deep links
         function openMobileWallet(walletType) {
+            // Track wallet selection
+            if (window.trackEvent) {
+                window.trackEvent('Wallet Selected', { wallet: walletType });
+            }
+
             // Close the modal first
             const modal = document.querySelector('div[style*="position: fixed"]');
             if (modal) modal.remove();
@@ -1216,6 +1255,14 @@
                         };
                         
                         console.log('Connected to wallet:', address);
+                        
+                        // Track successful wallet connection
+                        if (window.trackEvent) {
+                            window.trackEvent('Wallet Connected', { 
+                                address: address.substring(0, 6) + '...' + address.substring(address.length - 4),
+                                chainId: network?.chainId || 'unknown'
+                            });
+                        }
                         
                         // Check network (switch to HyperEVM if needed)
                         const network = await provider.getNetwork();
